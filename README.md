@@ -34,16 +34,19 @@ In this configuration we are basically powering all the set up via the generator
 So, now that we have proven the base functionality of the set up, we can proceed with the main tasks of the individual assignment.  
 ## Task1: max sampling frequency
 For this task we created a stand alone firmware to stress the Heltech ESP32 via sampling using the analogRead() function, as it will be used in the next steps of the exercise. The idea is simple: we count as many samples the ESP32 is able to take in a certain time and with those information we calculate the sampling rate, aka the sampling frequency. In order to get the exact frequency we measure also the exact time interval that is used in total to sample inside the theoretical window of sampling, which gives us the frequency with the following formula  
+
 $$f_{s,max} = \frac{N of samples}{t_f - t_i}. $$  
+
 From repeated experiments we found a $f_{s,max} \sim 16454 Hz$, with oscillations between $\sim 16448 Hz$ and $\sim 16455 Hz$.
 
 ## Task2: adapting via FFT the sampling rate
-Knowing the waveforme that we are generating, we know from the Nysquit theorem that in order to sample the signal without loosing any information we need a sampling frequency $f_s$ at least bigger then 2 times the highest component of the signal, which we will call $f_m$, giving us the formula $f_s > 2 f_m$. With the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2.5 f_$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. Furthermore, under suggestion from chatGPT, which helped building the code for the whole exercise, we have added a lowerlimit of $f_s = 10 Hz$ to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, as we can see in the plots below.  
+Knowing the waveforme that we are generating, we know from the Nysquit theorem that in order to sample the signal without loosing any information we need a sampling frequency $f_s$ at least bigger then 2 times the highest component of the signal, which we will call $f_m$, giving us the formula $f_s > 2 f_m$.  
+With the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2.5 f_$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. Furthermore, under suggestion from chatGPT, which helped building the code for the whole exercise, we have added a lowerlimit of $f_s = 10 Hz$ to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, as we can see in the plots below.  
 
 <img src="sampling-fft-10hz.PNG" width="700">  
 
 As we can see from the data in the table, the ftt performed well and we where able to adjust the $f_s$, but we were not able to test the reduction of power consumption due to a problem with the whole set up which is discussed later in the README.
 
-##Task3: Aggregate function and sending to the MQTT server
+## Task3: Aggregate function and sending to the MQTT server
 
-##Problems with the energy forniture to the Heltec in the INA219 configuration
+## Problems with the energy forniture to the Heltec in the INA219 configuration
