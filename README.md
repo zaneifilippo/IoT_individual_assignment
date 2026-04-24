@@ -3,11 +3,25 @@ Repo for all the code of the individual assignment for the IoT course
 by Filippo Zanei
 
 # Structure of the repo
-All the main.cpp have been uploaded here as .txt files, in order to reproduce correctly all the experiments I suggest to create in PlatformIO 3 different projects: one for the signal generator and INA219 [main.cpp](/generator-main-INA219-final.txt), one for the maximum sampling frequency and one for the receiver, which works also as the transmitter to the MQTT broker.
+All the main.cpp have been uploaded here as .txt files, in order to reproduce correctly all the experiments I suggest to create in PlatformIO 3 different projects: one for the signal generator and INA219 [main.cpp](/generator-main-INA219-final.txt), one for the maximum sampling frequency and one for the receiver, which works also as the transmitter to the MQTT broker. (correct links are still to be updated, but all the files are here).
 
 ## Setup and fondamentals
 In order to achieve all the tasks required for the exercise, we need at least one ESP32 with a LoRa antenna, a signal generator that simulates the signal a potential sensor would send to the ESP32, that can be another ESP32 or a computer (potentially one ESP32 can be enough if it has boh DAC and ACD on board, but our Heltech ESP3-V3 was lacking of the DAC, futhermore to correctly simulate the sensor signal, doing it directly on the same device that is also receiving and analysing it is not really rapresentative of the reality we want simulate, expecially reguarding power consumption).  
-In our specific case we ended up using a ESP32 from AZ-Delivery, equipped only with the WiFi but with both DAC and ADC, as the signal generator, while we used the Heltech one as the receiver and analyser. This one is also the one that will transmit all the aggregated data to the servers.
+In our specific case we ended up using a ESP32 from AZ-Delivery, equipped only with the WiFi but with both DAC and ADC, as the signal generator, while we used the Heltech one as the receiver and analyser. This one is also the one that will transmit all the aggregated data to the servers.  
+Before starting with the task, we have to validate a functional set up with the hardare at my disposal. As said before, I had:
+* 1 ESP32 from AZ-Delivery, used as the signal generator and data sampler from the INA219;
+* 1 Heltec ESP32-V3, capable both of WiFi and LoRa communication, used as the receiver and transmitter.
+
+<img src="IMG_6700.JPG" width="400">
+
+
+We started with the following basic configuration, and tried to test if the generator is able to correctly recreate the chosen waveform, which is $y(t) = 2 sin (2pi2t) + sin(2pi0.5t)$.  
+
+<img src="theoretical-first-waveform.PNG" width="400">
+<img src="serial-plot-first-waveform.PNG" width="400">
+
+
+As can be seen from the pictures, the generated waveform corresponds to the theorical one and this proves that in the simplier set up both the generator and the receiver perform correctly their tasks.
 The first problem we encountered with this set up came once 
 
 ## Task1: max sampling frequency
