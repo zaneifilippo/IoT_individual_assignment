@@ -1,0 +1,236 @@
+#include <Arduino.h>
+#include <WiFi.h>
+#include <PubSubClient.h>
+#include <arduinoFFT.h>
+#include "secrets.h"
+
+constexpr uint8_t ADC_PIN = 2;
+
+// FFT
+constexpr uint16_t FFT_SAMPLES = 1024;
+constexpr double FFT_SAMPLE_FREQ_HZ = 100.0;
+constexpr uint32_t FFT_SAMPLE_PERIOD_US = 1000000UL / (uint32_t)FFT_SAMPLE_FREQ_HZ;
+
+// Sampling dinamico
+constexpr float MIN_SAMPLE_FREQ_HZ = 20.0f;
+constexpr float MAX_SAMPLE_FREQ_HZ = 200.0f;
+constexpr float NYQUIST_MARGIN = 2.5f;
+
+// Aggregazione
+constexpr uint32_t AGG_WINDOW_MS = 10000;
+
+// Buffer FFT
+double vReal[FFT_SAMPLES];
+double vImag[FFT_SAMPLES];
+ArduinoFFT<double> FFT(vReal, vImag, FFT_SAMPLES, FFT_SAMPLE_FREQ_HZ);
+
+// MQTT
+WiFiClient wifiClient;
+PubSubClient mqttClient(wifiClient);
+
+// Sampling
+float currentSampleFreqHz = 50.0f;
+uint32_t currentSamplePeriodUs = 20000;
+uint32_t nextSampleUs = 0;
+
+// Aggregazione
+uint32_t windowStartMs = 0;
+uint32_t sampleCount = 0;
+uint64_t sampleSum = 0;
+int sampleMin = 4095;
+int sampleMax = 0;
+
+void connectWiFi()
+{
+  if (WiFi.status() == WL_CONNECTED)
+    return;
+
+  Serial.print("# Connecting WiFi...");
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("# Heltec IP: ");
+  Serial.println(WiFi.localIP());
+
+  Serial.print("# MQTT host: ");
+  Serial.println(MQTT_HOST);
+
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\n# WiFi connected");
+}
+
+void connectMQTT()
+{
+  mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+
+  while (!mqttClient.connected())
+  {
+    Serial.print("# Connecting MQTT... ");
+
+    if (mqttClient.connect(MQTT_CLIENT_ID))
+    {
+      Serial.println("OK");
+
+      mqttClient.publish(
+          MQTT_TOPIC_STATUS,
+          "connessione con heltec riuscita");
+    }
+    else
+    {
+      Serial.print("FAIL rc=");
+      Serial.println(mqttClient.state());
+      delay(2000);
+    }
+  }
+}
+
+float computeSamplingRate(float fmax)
+{
+  float fs = fmax * NYQUIST_MARGIN;
+
+  if (fs < MIN_SAMPLE_FREQ_HZ)
+    fs = MIN_SAMPLE_FREQ_HZ;
+  if (fs > MAX_SAMPLE_FREQ_HZ)
+    fs = MAX_SAMPLE_FREQ_HZ;
+
+  return fs;
+}
+
+float runFFT()
+{
+  Serial.println("# Running FFT...");
+
+  uint32_t nextUs = micros();
+
+  for (int i = 0; i < FFT_SAMPLES; i++)
+  {
+    while ((int32_t)(micros() - nextUs) < 0)
+      ;
+    nextUs += FFT_SAMPLE_PERIOD_US;
+
+    int raw = analogRead(ADC_PIN);
+    vReal[i] = raw;
+    vImag[i] = 0;
+  }
+
+  // Rimuovi DC
+  double mean = 0;
+  for (int i = 0; i < FFT_SAMPLES; i++)
+    mean += vReal[i];
+  mean /= FFT_SAMPLES;
+  for (int i = 0; i < FFT_SAMPLES; i++)
+    vReal[i] -= mean;
+
+  FFT.windowing(FFTWindow::Hamming, FFTDirection::Forward);
+  FFT.compute(FFTDirection::Forward);
+  FFT.complexToMagnitude();
+
+  double binWidth = FFT_SAMPLE_FREQ_HZ / FFT_SAMPLES;
+
+  double maxMag = 0;
+  int peakBin = 1;
+
+  for (int i = 1; i < FFT_SAMPLES / 2; i++)
+  {
+    if (vReal[i] > maxMag)
+    {
+      maxMag = vReal[i];
+      peakBin = i;
+    }
+  }
+
+  float freq = peakBin * binWidth;
+
+  Serial.print("# Peak freq = ");
+  Serial.println(freq);
+
+  return freq;
+}
+
+void publishData()
+{
+  if (sampleCount == 0)
+    return;
+
+  float mean = sampleSum / (float)sampleCount;
+
+  char payload[200];
+
+  snprintf(payload, sizeof(payload),
+           "{\"mean\":%.2f,\"min\":%d,\"max\":%d,\"n\":%lu,\"fs\":%.2f}",
+           mean, sampleMin, sampleMax,
+           (unsigned long)sampleCount,
+           currentSampleFreqHz);
+
+  mqttClient.publish(MQTT_TOPIC_DATA, payload);
+
+  Serial.println(payload);
+}
+
+void resetWindow()
+{
+  windowStartMs = millis();
+  sampleCount = 0;
+  sampleSum = 0;
+  sampleMin = 4095;
+  sampleMax = 0;
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  delay(1000);
+
+  analogReadResolution(12);
+  analogSetPinAttenuation(ADC_PIN, ADC_11db);
+
+  connectWiFi();
+  connectMQTT();
+
+  float fmax = runFFT();
+  currentSampleFreqHz = computeSamplingRate(fmax);
+
+  currentSamplePeriodUs = 1000000UL / currentSampleFreqHz;
+
+  Serial.print("# Sampling freq set to ");
+  Serial.println(currentSampleFreqHz);
+
+  nextSampleUs = micros();
+  resetWindow();
+}
+
+void loop()
+{
+  if (WiFi.status() != WL_CONNECTED)
+    connectWiFi();
+  if (!mqttClient.connected())
+    connectMQTT();
+
+  mqttClient.loop();
+
+  uint32_t nowUs = micros();
+
+  if ((int32_t)(nowUs - nextSampleUs) >= 0)
+  {
+    nextSampleUs += currentSamplePeriodUs;
+
+    int raw = analogRead(ADC_PIN);
+
+    sampleCount++;
+    sampleSum += raw;
+
+    if (raw < sampleMin)
+      sampleMin = raw;
+    if (raw > sampleMax)
+      sampleMax = raw;
+  }
+
+  if (millis() - windowStartMs >= AGG_WINDOW_MS)
+  {
+    publishData();
+    resetWindow();
+  }
+}

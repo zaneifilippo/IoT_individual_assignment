@@ -1,0 +1,169 @@
+#include <Arduino.h>
+#include <arduinoFFT.h>
+
+constexpr uint8_t ADC_PIN = 2;
+
+// FFT iniziale pensata per segnali lenti
+constexpr uint16_t FFT_SAMPLES = 1024;
+constexpr double FFT_SAMPLE_FREQ_HZ = 100.0;
+constexpr uint32_t FFT_SAMPLE_PERIOD_US = 1000000UL / (uint32_t)FFT_SAMPLE_FREQ_HZ;
+
+// Sampling normale dopo calibrazione
+constexpr float MIN_SAMPLE_FREQ_HZ = 10.0f;
+constexpr float MAX_SAMPLE_FREQ_HZ = 2000.0f;
+constexpr float NYQUIST_MARGIN = 2.5f;
+
+// Soglie anti-rumore
+constexpr double MIN_VALID_FREQ_HZ = 0.2;
+constexpr double MAX_VALID_FREQ_HZ = 40.0;
+constexpr double RELATIVE_THRESHOLD = 0.20;
+
+double vReal[FFT_SAMPLES];
+double vImag[FFT_SAMPLES];
+
+ArduinoFFT<double> FFT(vReal, vImag, FFT_SAMPLES, FFT_SAMPLE_FREQ_HZ);
+
+float currentSampleFreqHz = 50.0f;
+uint32_t currentSamplePeriodUs = 20000;
+uint32_t nextSampleUs = 0;
+
+float computeRecommendedSamplingRate(float highestFreqHz)
+{
+  float fs = highestFreqHz * NYQUIST_MARGIN;
+
+  if (fs < MIN_SAMPLE_FREQ_HZ)
+    fs = MIN_SAMPLE_FREQ_HZ;
+  if (fs > MAX_SAMPLE_FREQ_HZ)
+    fs = MAX_SAMPLE_FREQ_HZ;
+
+  return fs;
+}
+
+float runInitialFft()
+{
+  Serial.println("# Initial FFT acquisition...");
+
+  uint32_t nextUs = micros();
+
+  for (uint16_t i = 0; i < FFT_SAMPLES; i++)
+  {
+    while ((int32_t)(micros() - nextUs) < 0)
+    {
+    }
+
+    nextUs += FFT_SAMPLE_PERIOD_US;
+
+    int raw = analogRead(ADC_PIN);
+    vReal[i] = (double)raw;
+    vImag[i] = 0.0;
+  }
+
+  // Rimuove offset DC: fondamentale perché il segnale ADC è centrato
+  // attorno a metà scala, non attorno a zero.
+  double mean = 0.0;
+  for (uint16_t i = 0; i < FFT_SAMPLES; i++)
+  {
+    mean += vReal[i];
+  }
+  mean /= FFT_SAMPLES;
+
+  for (uint16_t i = 0; i < FFT_SAMPLES; i++)
+  {
+    vReal[i] -= mean;
+  }
+
+  FFT.windowing(FFTWindow::Hamming, FFTDirection::Forward);
+  FFT.compute(FFTDirection::Forward);
+  FFT.complexToMagnitude();
+
+  double binWidthHz = FFT_SAMPLE_FREQ_HZ / FFT_SAMPLES;
+
+  uint16_t minBin = ceil(MIN_VALID_FREQ_HZ / binWidthHz);
+  uint16_t maxBin = floor(MAX_VALID_FREQ_HZ / binWidthHz);
+
+  if (maxBin >= FFT_SAMPLES / 2)
+  {
+    maxBin = FFT_SAMPLES / 2 - 1;
+  }
+
+  // Trova la magnitudine massima nella banda utile
+  double maxMag = 0.0;
+  uint16_t peakBin = minBin;
+
+  for (uint16_t i = minBin; i <= maxBin; i++)
+  {
+    if (vReal[i] > maxMag)
+    {
+      maxMag = vReal[i];
+      peakBin = i;
+    }
+  }
+
+  double threshold = maxMag * RELATIVE_THRESHOLD;
+
+  // Cerca la frequenza più alta significativa,
+  // ma SOLO nella banda utile, non fino a Nyquist.
+  uint16_t highestSignificantBin = peakBin;
+
+  for (uint16_t i = minBin; i <= maxBin; i++)
+  {
+    if (vReal[i] >= threshold)
+    {
+      highestSignificantBin = i;
+    }
+  }
+
+  float peakFreqHz = peakBin * binWidthHz;
+  float highestFreqHz = highestSignificantBin * binWidthHz;
+
+  Serial.print("# bin_width_hz=");
+  Serial.println(binWidthHz, 4);
+
+  Serial.print("# peak_freq_hz=");
+  Serial.println(peakFreqHz, 4);
+
+  Serial.print("# highest_significant_freq_hz=");
+  Serial.println(highestFreqHz, 4);
+
+  return highestFreqHz;
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  delay(1000);
+
+  analogReadResolution(12);
+  analogSetPinAttenuation(ADC_PIN, ADC_11db);
+
+  Serial.println("# Heltec initial FFT calibration");
+
+  float highestFreqHz = runInitialFft();
+
+  currentSampleFreqHz = computeRecommendedSamplingRate(highestFreqHz);
+  currentSamplePeriodUs = (uint32_t)(1000000.0f / currentSampleFreqHz);
+
+  Serial.print("# selected_sample_freq_hz=");
+  Serial.println(currentSampleFreqHz, 3);
+
+  nextSampleUs = micros() + currentSamplePeriodUs;
+}
+
+void loop()
+{
+  uint32_t nowUs = micros();
+
+  if ((int32_t)(nowUs - nextSampleUs) >= 0)
+  {
+    nextSampleUs += currentSamplePeriodUs;
+
+    int raw = analogRead(ADC_PIN);
+
+    // Per Better Serial Plotter
+    Serial.println(raw);
+  }
+  else
+  {
+    delay(1);
+  }
+}

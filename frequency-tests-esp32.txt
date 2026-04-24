@@ -1,0 +1,17 @@
+Generated frequency: 500.00 Hz | Sampling frequency: 2000.00 Hz | FFT peak: 500.49 Hz
+Generated frequency: 1000.00 Hz | Sampling frequency: 4000.00 Hz | FFT peak: 1000.98 Hz
+Generated frequency: 2000.00 Hz | Sampling frequency: 8000.00 Hz | FFT peak: 2001.95 Hz
+Generated frequency: 4000.00 Hz | Sampling frequency: 16000.00 Hz | FFT peak: 4003.92 Hz
+Generated frequency: 8000.00 Hz | Sampling frequency: 32000.00 Hz | FFT peak: 8007.83 Hz
+Generated frequency: 16000.00 Hz | Sampling frequency: 64000.00 Hz | FFT peak: 16015.62 Hz
+Generated frequency: 32000.00 Hz | Sampling frequency: 128000.00 Hz | FFT peak: 32031.27 Hz
+Generated frequency: 64000.00 Hz | Sampling frequency: 256000.00 Hz | FFT peak: 64062.71 Hz
+Generated frequency: 128000.00 Hz | Sampling frequency: 512000.00 Hz | FFT peak: 128125.33 Hz
+Generated frequency: 256000.00 Hz | Sampling frequency: 1024000.00 Hz | FFT peak: 256250.55 Hz
+Generated frequency: 512000.00 Hz | Sampling frequency: 2048000.00 Hz | FFT peak: 512500.39 Hz
+Generated frequency: 1024000.00 Hz | Sampling frequency: 4096000.00 Hz | FFT peak: 1025000.21 Hz
+Generated frequency: 2048000.00 Hz | Sampling frequency: 8192000.00 Hz | FFT peak: 2050005.20 Hz
+Generated frequency: 4096000.00 Hz | Sampling frequency: 16384000.00 Hz | FFT peak: 4100003.24 Hz
+Generated frequency: 8192000.00 Hz | Sampling frequency: 18768000.00 Hz | FFT peak: 8200216.36 Hz
+Generated frequency: 8192000.00 Hz | Sampling frequency: 20536000.00 Hz | FFT peak: 8199697.90 Hz
+Generated frequency: 8192000.00 Hz | Sampling frequency: 23072000.00 Hz | FFT peak: 8201158.40 Hz

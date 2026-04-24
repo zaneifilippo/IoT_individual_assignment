@@ -1,0 +1,35 @@
+#include <Arduino.h>
+
+constexpr uint8_t ADC_PIN = 2;       // Heltec V3: GPIO2 = ADC1_CH1
+constexpr uint32_t SAMPLE_FREQ = 50; // Hz
+constexpr uint32_t SAMPLE_PERIOD_US = 1000000UL / SAMPLE_FREQ;
+
+uint32_t nextSampleUs = 0;
+
+void setup()
+{
+  Serial.begin(115200);
+  delay(500);
+
+  // ADC ESP32-S3: default 12 bit, ma lo imposto esplicitamente
+  analogReadResolution(12);
+
+  // Range più ampio per leggere un segnale vicino al range del DAC
+  analogSetPinAttenuation(ADC_PIN, ADC_11db);
+
+  nextSampleUs = micros();
+}
+
+void loop()
+{
+  while ((int32_t)(micros() - nextSampleUs) < 0)
+  {
+    // attesa attiva fino all'istante del prossimo campione
+  }
+  nextSampleUs += SAMPLE_PERIOD_US;
+
+  int rawValue = analogRead(ADC_PIN);
+
+  // Per Better Serial Plotter: una sola variabile numerica per riga
+  Serial.println(rawValue);
+}
