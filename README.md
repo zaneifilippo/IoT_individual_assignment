@@ -17,8 +17,8 @@ Before starting with the task, we have to validate a functional set up with the 
 
 We started with the following basic configuration, and tried to test if the generator is able to correctly recreate the chosen waveform, which is $y(t) = 2 sin (2pi0.5t) + sin(2pi2t)$.  
 
-<img src="theoretical-first-waveform.PNG" width="400">
-<img src="serial-plot-first-waveform.PNG" width="400">
+<img src="theoretical-first-waveform.PNG" width="700">
+<img src="serial-plot-first-waveform.PNG" width="700">
 
 
 As can be seen from the pictures, the generated waveform corresponds to the theorical one and this proves that in the simplier set up both the generator and the receiver perform correctly their tasks.
