@@ -54,12 +54,12 @@ The information sended to the MQTT broker could have been the raw data, but to m
 Following, the printed data from the pc terminal, of some of the pakages sent from this configuration:  
 
 iot/heltec/status connessione con heltec riuscita
-iot/heltec/aggregate {"mean":1960.56,"min":179,"max":4043,"n":200,"fs":20.00}
-iot/heltec/aggregate {"mean":1960.16,"min":175,"max":4053,"n":201,"fs":20.00}
-iot/heltec/aggregate {"mean":1962.19,"min":175,"max":4043,"n":200,"fs":20.00}
-iot/heltec/aggregate {"mean":1961.03,"min":178,"max":4041,"n":200,"fs":20.00}
-iot/heltec/aggregate {"mean":1961.26,"min":175,"max":4043,"n":200,"fs":20.00}
-iot/heltec/aggregate {"mean":1961.71,"min":179,"max":4051,"n":200,"fs":20.00}
-iot/heltec/aggregate {"mean":1962.08,"min":173,"max":4044,"n":200,"fs":20.00}
+iot/heltec/aggregate {"mean":1960.56,"min":179,"max":4043,"n":200,"fs":20.00}  
+iot/heltec/aggregate {"mean":1960.16,"min":175,"max":4053,"n":201,"fs":20.00}  
+iot/heltec/aggregate {"mean":1962.19,"min":175,"max":4043,"n":200,"fs":20.00}  
+iot/heltec/aggregate {"mean":1961.03,"min":178,"max":4041,"n":200,"fs":20.00}  
+iot/heltec/aggregate {"mean":1961.26,"min":175,"max":4043,"n":200,"fs":20.00}  
+iot/heltec/aggregate {"mean":1961.71,"min":179,"max":4051,"n":200,"fs":20.00}  
+iot/heltec/aggregate {"mean":1962.08,"min":173,"max":4044,"n":200,"fs":20.00}  
 
 ## Problems with the energy forniture to the Heltec in the INA219 configuration
