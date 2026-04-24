@@ -41,7 +41,7 @@ From repeated experiments we found a $f_{s,max} \sim 16454 Hz$, with oscillation
 
 ## Task2: adapting via FFT the sampling rate
 Knowing the waveforme that we are generating, we know from the Nysquit theorem that in order to sample the signal without loosing any information we need a sampling frequency $f_s$ at least bigger then 2 times the highest component of the signal, which we will call $f_m$, giving us the formula $f_s > 2 f_m$.  
-With the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2.5 f_$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. Furthermore, under suggestion from chatGPT, which helped building the code for the whole exercise, we have added a lowerlimit of $f_s = 10 Hz$ to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, as we can see in the plots below.  
+With the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2,5 f_m$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. Furthermore, under suggestion from chatGPT, which helped building the code for the whole exercise, we have added a lowerlimit of $f_s = 10 Hz$ to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, as we can see in the plots below.  
 
 <img src="sampling-fft-10hz.PNG" width="700">  
 
