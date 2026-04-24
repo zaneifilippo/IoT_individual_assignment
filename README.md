@@ -12,7 +12,7 @@ Before starting with the task, we have to validate a functional set up with the 
 * 1 ESP32 from AZ-Delivery, used as the signal generator and data sampler from the INA219;
 * 1 Heltec ESP32-V3, capable both of WiFi and LoRa communication, used as the receiver and transmitter.
 
-<img src="IMG_6700.JPG" width="400">
+<img src="IMG_6700.JPG" width="700">
 
 
 We started with the following basic configuration, and tried to test if the generator is able to correctly recreate the chosen waveform, which is $y(t) = 2 sin (2pi2t) + sin(2pi0.5t)$.  
@@ -22,10 +22,15 @@ We started with the following basic configuration, and tried to test if the gene
 
 
 As can be seen from the pictures, the generated waveform corresponds to the theorical one and this proves that in the simplier set up both the generator and the receiver perform correctly their tasks.
-The first problem we encountered with this set up came once we tried to implement in the circuit the INA219 to do energy consumption measurements. Indeed, from the previous configuration, the Heltec ESP32 is powered via the usb port, which makes impossible to put correctly in series the INA219 to measure its consuptions. With the hardware at our disposal, there was no solution to get other sources of power to the Heltec, so we tried something "experimental": why don't we treat the Heltec as if it was a sensor connected to the AZ-Delivery ESP32 and then get the energy directly from it? In theory it should work, and as we will se in this repo, for a while it worked, but once we reached more hungry tasks this was not enought and we had to stop. So, the cofiguration we ended up is the following:
-<img src="IMG_6705.JPG" width="400">
+The first problem we encountered with this set up came once we tried to implement in the circuit the INA219 to do energy consumption measurements. Indeed, from the previous configuration, the Heltec ESP32 is powered via the usb port, which makes impossible to put correctly in series the INA219 to measure its consuptions. With the hardware at our disposal, there was no solution to get other sources of power to the Heltec, so we tried something "experimental": why don't we treat the Heltec as if it was a sensor connected to the AZ-Delivery ESP32 and then get the energy directly from it? In theory it should work, and as we will se in this repo, for a while it worked, but once we reached more hungry tasks this was not enought and we had to stop. So, the cofiguration we ended up is the following:  
+
+<img src="IMG_6705.JPG" width="700">  
+
 In this configuration we are basically powering all the set up via the generator, powering the INA219 trough the 3.3V pin and the Heltec via the 5V pin, which has the INA219 in series to get the energy measurements for the operations on the Heltec. The configuration worked and we had coherent results in the power measurements, as we can see in the following plots:
-<img src="power_measure_baseline.PNG" width="400">
+
+
+<img src="power_measure_baseline.PNG" width="700">  
+
 
 ## Task1: max sampling frequency
 For this task we created a stand alone firmware to stress the Heltech ESP32 via sampling using the analogRead() function, as it will be used in the next steps of the exercise. The idea is simple: we count as many samples the ESP32 is able to take in a certain time and with those information we calculate the sampling rate, aka the sampling frequency. In order to get the exact frequency we measure also the exact time interval that is used in total to sample inside the theoretical window of sampling, which gives us the frequency with the following formula  
