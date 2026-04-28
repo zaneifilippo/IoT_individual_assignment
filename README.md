@@ -95,20 +95,16 @@ To understand if this procedure is really giving us a reduction of power consump
 </p>
 
 
+As we can see from the data in the table and the pictures, we can see where the FFT is being computed, and its energy cost, and that only when we push the $f_s$ to 10kHz the average power consumption of the ESP32 while sampling is higher then for the other frequencies, although it isn't a significant increase compared to the cost of computing the FFT.  
+  
+Furthermore, since the measurements didn't show relevant differences in energy consumption between $f_s$ values under $10kHz$, we decided to add a lowerlimit frequency for the $f_s$ in the FFT, of $10 Hz$ (as shown in the picture) or somethimes of $20Hz$ for better resolution, to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction.  
 
-
-**
-
-*
-
-*$*
-
-As we can see from the data in the table and the pictures, we can clearly see where the FFT is being computed and that only when we push the $f_s$ to 1000Hz the average power consumption of the ESP32 is significantly higher then for the other frequencies.
-
-
-Furthermore, since the measurements didn't show relevant differences in energy consumption between $f_s$ values under $100Hz$, we decided to add a lowerlimit frequency for the $f_s$ in the FFT, of $10 Hz$ (as shown in the picture) or somethimes of $20Hz$ for better resolution, to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, under suggestion from chatGPT, which helped building the code for the whole exercise, we have added a lowerlimit frequency for the $f_s$ of $f_s = 10 Hz$ to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, as we can see in the plots below.  
-
-<img src="sampling-fft-10hz.PNG" width="700">  
+<p align="center">
+  <img src="sampling-fft-10hz.PNG" width="700">
+  <br>
+  <em>Recunstructed waveform from the receiver sampling at 10kHz</em>
+</p>
+  
 
 ## Task3: Aggregate function and sending to the MQTT server
 Since the configuration with the INA219 blocks the direct connection to the pc with the usb cable, we first tried to create the connection to the pc via the Mosquitto broker, which gave many problems due to privacy settings of the pc but with some help from chatGPT we were able to give it permission to give access to all devices connected to the same wifi network.  
