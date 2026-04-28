@@ -51,8 +51,8 @@ From repeated experiments we found a $f_{s,max} \sim 16454 Hz$, with oscillation
 
 ## Task2: adapting via FFT the sampling rate
 Knowing the waveform that we are generating, we know from the Nysquit theorem that in order to sample the signal without loosing any information we need a sampling frequency $f_s$ at least bigger then 2 times the highest component of the signal, which we will call $f_m$, giving us the formula $f_s > 2 f_m$, that in our case means findind a $f_s > 4Hz$.    
-Assuming that an higher sampling frequency consumes more energy then a smaller one, and with the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2.5 /cdot f_m$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. 
-From the following data, we can see that the FFT had performed correctly, changing the $f_s$ from the standard 50Hz to 5.13Hz, which is circa 2.5 times the highest frequency of the signal ($f_m = 2Hz$):
+Assuming that an higher sampling frequency consumes more energy then a smaller one, and with the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2.5 \cdot f_m$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. 
+From the following data, we can see that the FFT had performed correctly, changing the $f_s$ from the standard $50Hz$ to $5.13Hz$, which is circa 2.5 times the highest frequency of the signal ($f_m = 2Hz$):
 
 ```
 iot/heltec/status connessione con heltec riuscita
