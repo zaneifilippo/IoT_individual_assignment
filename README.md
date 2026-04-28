@@ -41,7 +41,7 @@ To solve this problem, we had to use another source of power for the Heltec ESP3
 
 In this way we were able to complete the other tasks and correctly measure, through the INA219, the power consumption of the Heltec board not only while sampling, but also when WiFi and LoRa connection were enabled.
 ## Task1: max sampling frequency
-For this task we created a stand alone firmware to stress the Heltech ESP32 via sampling using the analogRead() function, as it will be used in the next steps of the exercise. The idea is simple: we count as many samples the ESP32 is able to take in a certain time and with those information we calculate the sampling rate, aka the sampling frequency. In order to get the exact frequency we measure also the exact time interval that is used in total to sample inside the theoretical window of sampling, which gives us the frequency with the following formula  
+For this task we created a stand alone firmware ([max_sampling_speed](/max_sampling_speed/)) to stress the Heltech ESP32 via sampling using the analogRead() function, as it will be used in the next steps of the exercise. The idea is simple: we count as many samples the ESP32 is able to take in a certain time and with those information we calculate the sampling rate, aka the sampling frequency. In order to get the exact frequency we measure also the exact time interval that is used in total to sample inside the theoretical window of sampling, which gives us the frequency with the following formula  
 
 $$f_{s,max} = \frac{N of samples}{t_f - t_i}. $$  
 
