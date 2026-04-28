@@ -119,7 +119,7 @@ iot/heltec/aggregate {"mean":1962.08,"min":173,"max":4044,"n":200,"fs":20.00}
 ```
 The aggregation function is present both in the WiFi and the LoRa firmwares, although sometime we have reduced the $f_s$ or commented parts of the list of info to send in order to perform different experiment on the power consumption while sampling at different $f_s$ or by sending packages of different size.
 ## Task4: Sending the aggregated value to the MQTT server
-Since the configuration with the INA219 blocks the direct connection to the pc with the usb cable, we first tried to create the connection to the pc via the Mosquitto broker, which gave many problems due to privacy settings of the pc but with some help from chatGPT we were able to give it permission to give access to all devices connected to the same wifi network.  
+Since the configuration with the INA219 blocks the direct connection to the pc with the usb cable, we first tried to create the connection to the pc via the Mosquitto broker, which gave many problems due to privacy settings of the pc but with some help from chatGPT we were able to give it permission to give access to all devices connected to the same wifi network. The firmware discussed in this section can be found in the [receiver_individual_assignment](/receiver_individual_assignment/) folder. 
 
 The information sent to the MQTT broker could have been the raw data, but to make the task lighter, the data sent are a sequence of aggregated data: first the mean voltage measured over a windows of 10s, then for comparison the minimum and maximum voltage values measured in the window, followed by the number of points measured and the sampling rate $f_s$ chosen by the FFT, which is constant 20Hz since the lowerlimit was raised due to the bad waveform recunstructed from the 10Hz experiment. Although we were able to establish a connection via WiFi to the MQTT server on my PC, in this configuration we were not able to perform any kind of power measure due to the complete stop of working of the whole board once connected both ESP32s with the INA219, probably because the AZ-Delivery was not able to keep operations while also powering both the INA219 and the Heltec ESP32 together.  
 
@@ -134,8 +134,21 @@ Thanks to the power supply correction by using the modified charger instead of t
 ## Task5: Sending the aggregated value via LoRaWAN to the TTN server
 Due to the problems with the power supply, this part was done just after having access to the modified charger. Our main struggle was connecting to the LoRaWAN in the first place and then achieving a correct uplink. First we tried to implement to our sampling and aggregation firmware a LoRa connection part similar to what shown in class and present also on the professor Github, but none of our attempts was successful. So we decided to restart from the ground up with chatGPT, with the firmware from the previous task as part of the promptings, and with the request of making it able to do the same thing but through the LoRaWAN + TTN servers. After a stressfull day of talks with the LLM and debugging we finally come up with a working firmware, which is presented in the [heltec-test-lora](/heltec-test-lora/) folder. Note that, since the transmission of data with the LoRa antenna is much slower (thus less energy hungry) then the WiFi one, we had to add many delays in between operations in order to give it time to connect and send the data properly. One of the early errors of our code was indeed "force" to do the communication task too soon or too fast, which blocked the whole operation. In the following image we can see the successful uplink of a data package to the TTN:  
 <p align="center">
-  <img src="/images/primo-successo-invio-dati-via-lora-ttnscreeen.PNG" width="600">
+  <img src="/images/primo-successo-invio-dati-via-lora-ttnscreeen.PNG" width="800">
   <br>
   <em>Screenshot of a successful uplink onto the TTN via LoRaWAN.</em>
 </p>
+
+<p align="center">
+  <img src="/images/power_measure_lora_02try_success.PNG" width="700">
+  <br>
+  <em>Plot of the power consumption vs time of the receiver while sending packages of aggregated data via LoRaWAN.</em>
+</p>
+
+<p align="center">
+  <img src="/images/picco_potenza_trasmissione_lora_success.PNG" width="700">
+  <br>
+  <em>Plot of the peak in the power consumption vs time due to the sending of a package of data via the LoRaWAN.</em>
+</p>
+
 ## Problems with the energy forniture to the Heltec in the INA219 configuration
