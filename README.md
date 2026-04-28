@@ -50,15 +50,29 @@ $$f_{s,max} = \frac{N of samples}{t_f - t_i}. $$
 From repeated experiments we found a $f_{s,max} \sim 16454 Hz$, with oscillations between $\sim 16448 Hz$ and $\sim 16455 Hz$.
 
 ## Task2: adapting via FFT the sampling rate
-Knowing the waveforme that we are generating, we know from the Nysquit theorem that in order to sample the signal without loosing any information we need a sampling frequency $f_s$ at least bigger then 2 times the highest component of the signal, which we will call $f_m$, giving us the formula $f_s > 2 f_m$, that in our case means findind a $f_s > 4Hz$.    
-Assuming that an higher sampling frequency consumes more energy then a smaller one, and with the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2,5 f_m$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. 
-From the following data, we can see that the FFT had performed correctly, changing the $f_s$ from the standard 50Hz to 5.19Hz, which is circa 2.5 times the highest frequency of the signal ($f_m = 2Hz$):
+Knowing the waveform that we are generating, we know from the Nysquit theorem that in order to sample the signal without loosing any information we need a sampling frequency $f_s$ at least bigger then 2 times the highest component of the signal, which we will call $f_m$, giving us the formula $f_s > 2 f_m$, that in our case means findind a $f_s > 4Hz$.    
+Assuming that an higher sampling frequency consumes more energy then a smaller one, and with the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2.5 /cdot f_m$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. 
+From the following data, we can see that the FFT had performed correctly, changing the $f_s$ from the standard 50Hz to 5.13Hz, which is circa 2.5 times the highest frequency of the signal ($f_m = 2Hz$):
 
-Furthermore, under suggestion from chatGPT, which helped building the code for the whole exercise, we have added a lowerlimit of $f_s = 10 Hz$ to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, as we can see in the plots below.  
+'
+iot/heltec/status connessione con heltec riuscita
+iot/heltec/aggregate {"mean":1987.88,"min":215,"max":4020,"n":51,"fs":5.13}
+'
+
+To understand if this procedure is really giving us a reduction of power consumpion, we decide to measure with the INA219 the power consumption of 4 scenarios, with different $f_s$ of 5Hz, 50Hz, 100Hz and 1000Hz. The measured data is collected in the following table while the full data collection can be found in the [data folder](/data/):  
+|		|5 Hz	|50Hz	|100Hz	|1000Hz	|
+
+<img src="/images/power_measure_reset_fft_sasmpling.PNG" width="700">
+<img src="/images/power_measure_reset_fft_sasmpling_50hz.PNG" width="700">
+<img src="/images/power_measure_reset_fft_sasmpling.PNG" width="700">
+<img src="/images/power_measure_reset_fft_sasmpling.PNG" width="700">
+
+As we can see from the data in the table and the pictures, we can clearly see where the FFT is being computed and that only when we push the $f_s$ to 1000Hz the average power consumption of the ESP32 is significantly higher then for the other frequencies.
+
+
+Furthermore, since the measurements didn't show relevant differences in energy consumption between $f_s$ values under $100Hz$, we decided to add a lowerlimit frequency for the $f_s$ in the FFT, of $10 Hz$ (as shown in the picture) or somethimes of $20Hz$ for better resolution, to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, under suggestion from chatGPT, which helped building the code for the whole exercise, we have added a lowerlimit frequency for the $f_s$ of $f_s = 10 Hz$ to the sampling in order to keep enough samples to have a recognizable waveform in the reconstruction, as we can see in the plots below.  
 
 <img src="sampling-fft-10hz.PNG" width="700">  
-
-As we can see from the data in the table, the ftt performed well and we where able to adjust the $f_s$, but we were not able to test the reduction of power consumption due to a problem with the whole set up which is discussed later in the README.
 
 ## Task3: Aggregate function and sending to the MQTT server
 Since the configuration with the INA219 blocks the direct connection to the pc with the usb cable, we first tried to create the connection to the pc via the Mosquitto broker, which gave many problems due to privacy settings of the pc but with some help from chatGPT we were able to give it permission to give access to all devices connected to the same wifi network.  
