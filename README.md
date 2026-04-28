@@ -54,10 +54,10 @@ Knowing the waveform that we are generating, we know from the Nysquit theorem th
 Assuming that an higher sampling frequency consumes more energy then a smaller one, and with the aim of reducing the energy consumption, we use FFT to get the $f_m$ from our entry signal and then reduce the samping frequency to and arbitrary $f_s = 2.5 /cdot f_m$, just to be extra safe when we have to sample signals with very small frequency and still get a good amount of data. 
 From the following data, we can see that the FFT had performed correctly, changing the $f_s$ from the standard 50Hz to 5.13Hz, which is circa 2.5 times the highest frequency of the signal ($f_m = 2Hz$):
 
-'
+```
 iot/heltec/status connessione con heltec riuscita
 iot/heltec/aggregate {"mean":1987.88,"min":215,"max":4020,"n":51,"fs":5.13}
-'
+```
 
 To understand if this procedure is really giving us a reduction of power consumpion, we decide to measure with the INA219 the power consumption of 4 scenarios, with different $f_s$ of 5Hz, 50Hz, 100Hz and 1000Hz. The measured data is collected in the following table while the full data collection can be found in the [data folder](/data/):  
 |$f_s$              |5 Hz	 |50Hz	|1kHz |10kHz|
