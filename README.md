@@ -66,7 +66,7 @@ To understand if this procedure is really giving us a reduction of power consump
 |-------------------|------|------|------|------|
 |avg FFT (mW)       |00    |00    |00    |00    |
 |avg sampling (mW)  |00    |00    |00    |00    |
-<\div>
+</div>
 
 <p align="center">
   <img src="/images/power_measure_reset_fft_sasmpling.PNG" width="700">
