@@ -3,7 +3,7 @@ Repo for all the code of the individual assignment for the IoT course
 by Filippo Zanei
 
 # Structure of the repo
-All the final firmware used in the assignment is organized in 4 folders: [max_sampling_speed](/max_sampling_speed/) contains the firmware to experimentally count the max sampling frequency obtainable on the ESP32 in use, [sinewave_generator](/sinewave_generator/) containst the firmware for the AZ-Delivery ESP32 for generating the signal and receiving the data of the powermeasures from the INA219, [receiver_individual_assignment] contains the firmware of the Heltec ESP32 which transmits the aggregated data of the mean of the signal via wifi and (/receiver_individual_assignment/) [heltec-test-lora](/heltec-test-lora/) contains the firmware of the Hletec ESP32 which transmits the aggregated data of the mean of the signal via LoRaWAN.  
+All the final firmware used in the assignment is organized in 4 folders: [max_sampling_speed](/max_sampling_speed/) contains the firmware to experimentally count the max sampling frequency obtainable on the ESP32 in use, [sinewave_generator](/sinewave_generator/) containst the firmware for the AZ-Delivery ESP32 for generating the signal and receiving the data of the powermeasures from the INA219, [receiver_individual_assignment](/receiver_individual_assignment/) contains the firmware of the Heltec ESP32 which transmits the aggregated data of the mean of the signal via wifi and [heltec-test-lora](/heltec-test-lora/) contains the firmware of the Hletec ESP32 which transmits the aggregated data of the mean of the signal via LoRaWAN.  
 The other .txt files contains various data and previous modifications of the main.cpp files of the firmwares.
 
 ## Setup and fondamentals
