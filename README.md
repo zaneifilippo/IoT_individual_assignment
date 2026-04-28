@@ -121,8 +121,15 @@ The aggregation function is present both in the WiFi and the LoRa firmwares, alt
 ## Task4: Sending the aggregated value to the MQTT server
 Since the configuration with the INA219 blocks the direct connection to the pc with the usb cable, we first tried to create the connection to the pc via the Mosquitto broker, which gave many problems due to privacy settings of the pc but with some help from chatGPT we were able to give it permission to give access to all devices connected to the same wifi network.  
 
-The information sended to the MQTT broker could have been the raw data, but to make the task lighter, the data sended are a sequence of aggregated data: first the mean voltage measured over a windows of 10s, then for comparison the minimum and maximum voltage values measured in the window, followed by the number of points measured and the sampling rate $f_s$ chosen by the FFT, which is constant 20Hz since the lowerlimit was raised due to the bad waveform recunstructed from the 10Hz experiment.  
-Following, the printed data from the pc terminal, of some of the pakages sent from this configuration:  
+The information sent to the MQTT broker could have been the raw data, but to make the task lighter, the data sent are a sequence of aggregated data: first the mean voltage measured over a windows of 10s, then for comparison the minimum and maximum voltage values measured in the window, followed by the number of points measured and the sampling rate $f_s$ chosen by the FFT, which is constant 20Hz since the lowerlimit was raised due to the bad waveform recunstructed from the 10Hz experiment. Although we were able to establish a connection via WiFi to the MQTT server on my PC, in this configuration we were not able to perform any kind of power measure due to the complete stop of working of the whole board once connected both ESP32s with the INA219, probably because the AZ-Delivery was not able to keep operations while also powering both the INA219 and the Heltec ESP32 together.  
+
+Thanks to the power supply correction by using the modified charger instead of the first ESP32 as a power source, we were able to perform some power measures of the working setup while it was also sending packages through the WiFi connection. The following plots show that having active the WiFi connection is much more power consuming than the sampling operation alone, with  
+
+<p align="center">
+  <img src="/images/power_measure_wifi.PNG" width="700">
+  <br>
+  <em>Plot of the power consumption vs time of the receiver sampling at 10kHz</em>
+</p>
 
 ## Task5: Sending the aggregated value via LoRaWAN to the TTN server
 
