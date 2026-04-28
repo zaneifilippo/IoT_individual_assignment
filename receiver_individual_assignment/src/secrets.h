@@ -1,9 +1,9 @@
 #pragma once
 
-const char *WIFI_SSID = "Vodafone-C44464333";   //"FiloPhone"; //
-const char *WIFI_PASSWORD = "9yMeC7aR47ytfPxJ"; //"*********"; //"9yMeC7aR47ytfPxJ";
+const char *WIFI_SSID = "yourwifi";
+const char *WIFI_PASSWORD = "yourpswrd";
 
-const char *MQTT_HOST = "192.168.1.4"; //"172.20.10.4"; //"192.168.1.2"; // IP locale del tuo PC
+const char *MQTT_HOST = "192.000.0.0"; // IP locale del tuo PC
 const uint16_t MQTT_PORT = 1883;
 
 const char *MQTT_CLIENT_ID = "heltec-v3-test";
