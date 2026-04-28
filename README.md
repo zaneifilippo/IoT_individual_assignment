@@ -102,7 +102,7 @@ Furthermore, since the measurements didn't show relevant differences in energy c
 <p align="center">
   <img src="sampling-fft-10hz.PNG" width="700">
   <br>
-  <em>Recunstructed waveform from the receiver sampling at 10kHz</em>
+  <em>Recunstructed waveform from the receiver sampling at 10Hz</em>
 </p>
   
 
@@ -111,7 +111,7 @@ Since the configuration with the INA219 blocks the direct connection to the pc w
 
 The information sended to the MQTT broker could have been the raw data, but to make the task lighter, the data sended are a sequence of aggregated data: first the mean voltage measured over a windows of 10s, then for comparison the minimum and maximum voltage values measured in the window, followed by the number of points measured and the sampling rate $f_s$ chosen by the FFT, which is constant 20Hz since the lowerlimit was raised due to the bad waveform recunstructed from the 10Hz experiment.  
 Following, the printed data from the pc terminal, of some of the pakages sent from this configuration:  
-
+```
 iot/heltec/status connessione con heltec riuscita  
 iot/heltec/aggregate {"mean":1960.56,"min":179,"max":4043,"n":200,"fs":20.00}  
 iot/heltec/aggregate {"mean":1960.16,"min":175,"max":4053,"n":201,"fs":20.00}  
@@ -120,5 +120,5 @@ iot/heltec/aggregate {"mean":1961.03,"min":178,"max":4041,"n":200,"fs":20.00}
 iot/heltec/aggregate {"mean":1961.26,"min":175,"max":4043,"n":200,"fs":20.00}  
 iot/heltec/aggregate {"mean":1961.71,"min":179,"max":4051,"n":200,"fs":20.00}  
 iot/heltec/aggregate {"mean":1962.08,"min":173,"max":4044,"n":200,"fs":20.00}  
-
+```
 ## Problems with the energy forniture to the Heltec in the INA219 configuration
