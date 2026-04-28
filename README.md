@@ -142,8 +142,9 @@ So we decided to restart from the ground up with chatGPT, with the firmware from
   <br>
   <em>Screenshot of a successful uplink onto the TTN via LoRaWAN.</em>
 </p>
-
-The following images instead show the energy consumption of the ESP32 during this task. From the first image (and its corresponding collected data) we can see clearly the periodic sent of data via the LoRa, with the peaks $>500 mW $ every $\sim 66s $ , while the sampling operation and the aggregation operation do not consume differently compared to the data from Task2. In our firmware no deep sleep mode was implemented, but is clear the advantage that using LoRa instead WiFi can give in terms of required energy for operating for long times. Another interesting information we can extract from this data is on the operation times of the board: in the code the delay between transmissions was set at $60000 ms$ , while the actual $\Delta t$ between the peaks is of $\sim 66299 ms$ , impling that there are $\sim 6.3 s$ of extra delay due to operation times or other factors that we do not know.  
+  
+The following images instead show the energy consumption of the ESP32 during this task. From the first image (and its corresponding collected data) we can see clearly the periodic sent of data via the LoRa, with the peaks $>500 mW $ every $\sim 66s $, while the sampling operation and the aggregation operation do not consume differently compared to the data from Task2.  
+In our firmware no deep sleep mode was implemented, but is clear the advantage that using LoRa instead WiFi can give in terms of required energy for operating for long times. Another interesting information we can extract from this data is on the operation times of the board: in the code the delay between transmissions was set at $60000 ms$ , while the actual $\Delta t$ between the peaks is of $\sim 66299 ms$ , impling that there are $\sim 6.3 s$ of extra delay due to operation times or other factors that we do not know.  
 In the second image we can appreciate the peak corresponding to the sending of one information package via the LoRa antenna.
 
 <p align="center">
