@@ -132,5 +132,10 @@ Thanks to the power supply correction by using the modified charger instead of t
 </p>
 
 ## Task5: Sending the aggregated value via LoRaWAN to the TTN server
-
+Due to the problems with the power supply, this part was done just after having access to the modified charger. Our main struggle was connecting to the LoRaWAN in the first place and then achieving a correct uplink. First we tried to implement to our sampling and aggregation firmware a LoRa connection part similar to what shown in class and present also on the professor Github, but none of our attempts was successful. So we decided to restart from the ground up with chatGPT, with the firmware from the previous task as part of the promptings, and with the request of making it able to do the same thing but through the LoRaWAN + TTN servers. After a stressfull day of talks with the LLM and debugging we finally come up with a working firmware, which is presented in the [heltec-test-lora](/heltec-test-lora/) folder. Note that, since the transmission of data with the LoRa antenna is much slower (thus less energy hungry) then the WiFi one, we had to add many delays in between operations in order to give it time to connect and send the data properly. One of the early errors of our code was indeed "force" to do the communication task too soon or too fast, which blocked the whole operation. In the following image we can see the successful uplink of a data package to the TTN:  
+<p align="center">
+  <img src="/images/primo-successo-invio-dati-via-lora-ttnscreeen.PNG" width="600">
+  <br>
+  <em>Screenshot of a successful uplink onto the TTN via LoRaWAN.</em>
+</p>
 ## Problems with the energy forniture to the Heltec in the INA219 configuration
