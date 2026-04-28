@@ -65,8 +65,8 @@ To understand if this procedure is really giving us a reduction of power consump
   
 |$f_s$              |5 Hz	 |50Hz	|1kHz |10kHz|
 |-------------------|------|------|------|------|
-|avg FFT (mW)       |00    |00    |00    |00    |
-|avg sampling (mW)  |00    |00    |00    |00    |
+|avg FFT (mW)       |293.3    |295.5    |294.6    |292.7    |
+|avg sampling (mW)  |216.5    |212.7    |220.9    |227.9  |
 
 </div>
 
