@@ -105,12 +105,8 @@ Furthermore, since the measurements didn't show relevant differences in energy c
   <em>Recunstructed waveform from the receiver sampling at 10Hz</em>
 </p>
   
-
-## Task3: Aggregate function and sending to the MQTT server
-Since the configuration with the INA219 blocks the direct connection to the pc with the usb cable, we first tried to create the connection to the pc via the Mosquitto broker, which gave many problems due to privacy settings of the pc but with some help from chatGPT we were able to give it permission to give access to all devices connected to the same wifi network.  
-
-The information sended to the MQTT broker could have been the raw data, but to make the task lighter, the data sended are a sequence of aggregated data: first the mean voltage measured over a windows of 10s, then for comparison the minimum and maximum voltage values measured in the window, followed by the number of points measured and the sampling rate $f_s$ chosen by the FFT, which is constant 20Hz since the lowerlimit was raised due to the bad waveform recunstructed from the 10Hz experiment.  
-Following, the printed data from the pc terminal, of some of the pakages sent from this configuration:  
+## Task3: Compute the aggregate function  
+We decided to compute the mean value of the sampled signal (mean ddp) over a window of $10s$ as the baseline of this task, but since the early problems with the power supply to the Heltec ESP32 made us unable to connect it at the same time to the PC via usb, we had to use the MQTT connection to use the Windows terminal "as a simplified Serial Monitor". In order to have a complessive idea of the behaviour of our receiver, we decided to add other values of the mean, the min and the max values of the signal, the number of samples taken over that window and the $f_s$, as we can se in the reported print of the terminal below:
 ```
 iot/heltec/status connessione con heltec riuscita  
 iot/heltec/aggregate {"mean":1960.56,"min":179,"max":4043,"n":200,"fs":20.00}  
@@ -121,4 +117,13 @@ iot/heltec/aggregate {"mean":1961.26,"min":175,"max":4043,"n":200,"fs":20.00}
 iot/heltec/aggregate {"mean":1961.71,"min":179,"max":4051,"n":200,"fs":20.00}  
 iot/heltec/aggregate {"mean":1962.08,"min":173,"max":4044,"n":200,"fs":20.00}  
 ```
+The aggregation function is present both in the WiFi and the LoRa firmwares, although sometime we have reduced the $f_s$ or commented parts of the list of info to send in order to perform different experiment on the power consumption while sampling at different $f_s$ or by sending packages of different size.
+## Task4: Sending the aggregated value to the MQTT server
+Since the configuration with the INA219 blocks the direct connection to the pc with the usb cable, we first tried to create the connection to the pc via the Mosquitto broker, which gave many problems due to privacy settings of the pc but with some help from chatGPT we were able to give it permission to give access to all devices connected to the same wifi network.  
+
+The information sended to the MQTT broker could have been the raw data, but to make the task lighter, the data sended are a sequence of aggregated data: first the mean voltage measured over a windows of 10s, then for comparison the minimum and maximum voltage values measured in the window, followed by the number of points measured and the sampling rate $f_s$ chosen by the FFT, which is constant 20Hz since the lowerlimit was raised due to the bad waveform recunstructed from the 10Hz experiment.  
+Following, the printed data from the pc terminal, of some of the pakages sent from this configuration:  
+
+## Task5: Sending the aggregated value via LoRaWAN to the TTN server
+
 ## Problems with the energy forniture to the Heltec in the INA219 configuration
