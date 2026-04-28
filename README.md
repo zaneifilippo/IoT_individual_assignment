@@ -60,10 +60,9 @@ iot/heltec/aggregate {"mean":1987.88,"min":215,"max":4020,"n":51,"fs":5.13}
 '
 
 To understand if this procedure is really giving us a reduction of power consumpion, we decide to measure with the INA219 the power consumption of 4 scenarios, with different $f_s$ of 5Hz, 50Hz, 100Hz and 1000Hz. The measured data is collected in the following table while the full data collection can be found in the [data folder](/data/):  
-|$f_s$              |5 Hz	 |50Hz	|100Hz |1000Hz|
+|$f_s$              |5 Hz	 |50Hz	|1kHz |10kHz|
 |-------------------|------|------|------|------|
 |avg FFT (mW)       |00    |00    |00    |00    |
-|-------------------|------|------|------|------|
 |avg sampling (mW)  |00    |00    |00    |00    |
 
 <img src="/images/power_measure_reset_fft_sasmpling.PNG" width="700">
