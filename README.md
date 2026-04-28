@@ -3,9 +3,8 @@ Repo for all the code of the individual assignment for the IoT course
 by Filippo Zanei
 
 # Structure of the repo
-All the final firmware used in the assignment is organized in 4 folders: [max_sampling_speed](/max_sampling_speed/) contains the firmware to experimentally count the max sampling frequency obtainable on the ESP32 in use, sine_wave
-
-the main.cpp have been uploaded here as .txt files, in order to reproduce correctly all the experiments I suggest to create in PlatformIO 3 different projects: one for the signal generator and INA219 [main.cpp](/generator-main-INA219-final.txt), one for the maximum sampling frequency and one for the receiver, which works also as the transmitter to the MQTT broker. (correct links are still to be updated, but all the files are here).
+All the final firmware used in the assignment is organized in 4 folders: [max_sampling_speed](/max_sampling_speed/) contains the firmware to experimentally count the max sampling frequency obtainable on the ESP32 in use, [sinewave_generator](/sinewave_generator/) containst the firmware for the AZ-Delivery ESP32 for generating the signal and receiving the data of the powermeasures from the INA219, [receiver_individual_assignment] contains the firmware of the Heltec ESP32 which transmits the aggregated data of the mean of the signal via wifi and (/receiver_individual_assignment/) [heltec-test-lora](/heltec-test-lora/) contains the firmware of the Hletec ESP32 which transmits the aggregated data of the mean of the signal via LoRaWAN.  
+The other .txt files contains various data and previous modifications of the main.cpp files of the firmwares.
 
 ## Setup and fondamentals
 In order to achieve all the tasks required for the exercise, we need at least one ESP32 with a LoRa antenna, a signal generator that simulates the signal a potential sensor would send to the ESP32, that can be another ESP32 or a computer (potentially one ESP32 can be enough if it has boh DAC and ACD on board, but our Heltech ESP3-V3 was lacking of the DAC, futhermore to correctly simulate the sensor signal, doing it directly on the same device that is also receiving and analysing it is not really rapresentative of the reality we want simulate, expecially reguarding power consumption).  
