@@ -65,6 +65,12 @@ To understand if this procedure is really giving us a reduction of power consump
 |avg FFT (mW)       |00    |00    |00    |00    |
 |avg sampling (mW)  |00    |00    |00    |00    |
 
+<p align="center">
+  <img src="/images/power_measure_reset_fft_sasmpling.PNG" width="700">
+  <br>
+  <em>Plot of the power consumption vs time of the receiver sampling at $f_s = 5Hz$</em>
+</p>
+
 <img src="/images/power_measure_reset_fft_sasmpling.PNG" width="700">
 *Plot of the power consumption vs time of the receiver sampling at $f_s = 5Hz$*
 <img src="/images/power_measure_reset_fft_sasmpling_50hz.PNG" width="700">
